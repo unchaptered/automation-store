@@ -1,0 +1,33 @@
+# NGINX Cook Book 74p
+# [STEP 1] ansible-playbook -i ./keys/inventory.txt ./ansible/install/nginx/nginx-lb-round-robin.yml
+
+- name: Converge
+  hosts: all
+  become: True
+  tasks:
+    - name: Install NGINX
+      shell: |
+        apt update
+        apt install nginx -y
+    
+    - name: Setting HTTP
+      shell: |
+        cat << EOF > /etc/nginx/sites-available/default
+        
+        upstream backend {
+          least_conn;
+          server 127.0.0.1:3000;
+          server 127.0.0.1:3001;
+        }
+
+        server {
+          listen 80;
+          listen [::]:80;
+
+          location / {
+              proxy_pass http://backend;
+          }
+
+        }
+        
+        EOF
