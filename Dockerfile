@@ -12,6 +12,7 @@ RUN sudo apt update
 RUN sudo apt install software-properties-common -y
 RUN sudo add-apt-repository --yes --update ppa:ansible/ansible
 RUN sudo apt install ansible -y
+RUN sudo ansible-galaxy install nginxinc.nginx
 
 WORKDIR /project
 
