@@ -1,0 +1,11 @@
+# NGINX Cook Book 74p
+# [STEP 1] ansible-galaxy install nginxinc.nginx
+# [STEP 2] ansible-playbook -i ./keys/inventory.txt ./ansible/install/nginx/nginx-install-role.yml
+
+- name: Converge
+  hosts: all
+  become: True
+  tasks:
+    - name: Install NGINX
+      ansible.builtin.include_role:
+        name: nginxinc.nginx
