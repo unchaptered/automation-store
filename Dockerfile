@@ -18,4 +18,4 @@ WORKDIR /project
 COPY . .
 
 RUN cd /project
-RUN chmod 400 /project/keys/*.pem
+RUN chmod 400 /project/keys/ansible-sample.pem

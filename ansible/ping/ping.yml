@@ -1,0 +1,8 @@
+# ansible-playbook -i ./keys/inventory.txt ./ansible/ping/ping.yml
+- name: Ping
+  hosts: all
+  gather_facts: False
+
+  tasks:
+    - name: Ping EC2 instances
+      ping:

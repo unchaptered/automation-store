@@ -1,6 +1,8 @@
 # automation-store
 
-- Ping
+**Automation with Public EC2 in default VPC**
+
+![](images\public-ec2.png)
 
 ## Docker
 
@@ -15,7 +17,7 @@ In this project I use docker to run tools.
 ```bash
 # docker build --build-arg TARGET_VALUE=<Public 아이피> -t automation-store .
 docker build -t automation-store .
-docker run --env-file .docker.env -t -i automation-store
+docker run -t -i automation-store
 ```
 
 2. Clean up
