@@ -1,0 +1,128 @@
+# NGINX Cook Book 74p
+# [STEP 1] Preprase python3-pip using ./ansible/install/python/python-install.yml
+# [STEP 2] ansible-playbook -i ./keys/inventory.txt ./ansible/install/ssh/ssh-notify-python.yml
+
+- name: Install SSH Notiy Python 
+  hosts: all
+  become: True
+  tasks:
+    - name: Install python3-pip
+      shell: |
+        apt install python3-pip -y
+        
+    - name: Install pip3 dependency
+      shell: 
+        pip3 install boto3
+    
+    - name: Create notify.sh in /etc/ssh
+      shell: |
+        cat << EOF > /etc/ssh/notify.sh
+        #!/bin/bash
+
+        python3 notify.py
+        EOF
+
+        chmod +x /etc/ssh/notify.sh
+
+    # - name: Create notipy.yml in /etc/ssh
+    #   shell: |
+    #     cat << EOF > /etc/ssh/notify.yml
+
+    #     ENV:
+    #       AWS_REGION: VALUE
+    #       AWS_ACCESS_KEY: VALUE
+    #       AWS_SECRET_KEY: VALUE
+
+    #     MAIL:
+    #       SENDER: VALUE
+    #       DESTINATION_LIST: VALUE
+    #       SUBJECT: VALUE
+    #       BODY: VALUE
+
+    #     EOF
+
+    - name: Copy notify.yml into /etc/ssh
+      copy:
+        src: /project/keys/ansible/ansible.install.ssh.ssh-notify-python.yml
+        dest: /etc/ssh/notify.yml
+
+    - name: Create notipy.py in /etc/ssh
+      shell: |
+        cat << EOF > /etc/ssh/notify.py
+        
+        import boto3
+        import yaml
+
+        class EnvDto():
+            
+            def __init__(self, iEnvDto: dict):
+                self.AWS_REGION = iEnvDto['AWS_REGION']
+                self.AWS_ACCESS_KEY = iEnvDto['AWS_ACCESS_KEY']
+                self.AWS_SECRET_KEY = iEnvDto['AWS_SECRET_KEY']
+
+        class MailDto():
+            
+            def __init__(self, iMailDto: dict):
+                self.SENDER = iMailDto['SENDER']
+                self.DESTINATION_LIST = iMailDto['DESTINATION_LIST']
+                self.SUBJECT = iMailDto['SUBJECT']
+                self.BODY = iMailDto['BODY']
+
+        class ConfigDto():
+            
+            def __init__(self, iConfig: dict):
+                self.ENV = EnvDto(iConfig['ENV'])
+                self.MAIL = MailDto(iConfig['MAIL'])
+
+        def getConfigDto(filePath='./notify.yml') -> ConfigDto:
+            with open(filePath, 'r') as file:
+                
+                data = yaml.load(file, Loader=yaml.FullLoader)
+                return ConfigDto(data)
+
+        configDto = getConfigDto()
+
+        ses_client = boto3.client(
+            'ses',
+            aws_access_key_id=configDto.ENV.AWS_ACCESS_KEY,
+            aws_secret_access_key=configDto.ENV.AWS_SECRET_KEY,
+            region_name=configDto.ENV.AWS_REGION
+        )
+
+        # 이메일 보내기
+        try:
+            
+            with open("notify.txt", "w") as file:
+                file.write("Hello, this is a notification!")
+            
+            response = ses_client.send_email(
+                Source=configDto.MAIL.SENDER,  # 이메일 발신자 설정 (SES에서 인증된 이메일 주소여야 합니다)
+                Destination={
+                    'ToAddresses': configDto.MAIL.DESTINATION_LIST,
+                },
+                Message={
+                    'Subject': {
+                        'Data': configDto.MAIL.SUBJECT,
+                    },
+                    'Body': {
+                        'Text': {
+                            'Data': configDto.MAIL.BODY,
+                        },
+                    },
+                },
+            )
+            print("이메일이 성공적으로 발송되었습니다.")
+        except Exception as e:
+            print(f"오류가 발생하여 이메일을 보내지 못했습니다: {e}")
+          
+        EOF
+
+    - name: Update /etc/pam.d/sshd to call /etc/ssh/notify.sh
+      lineinfile:
+        path: /etc/pam.d/sshd
+        line: 'session optional pam_exec.so seteuid /etc/ssh/notify.sh'
+        state: present
+
+    - name: Chmod +x /etc/ssh/notify.sh
+      shell: |
+        chmod +x /etc/ssh/notify.sh
