@@ -14,6 +14,27 @@
         - Install and HTTP LB(round robin)
     - Node
         - 16.x
+    - Python
+        - Install by apt
+    - SSH
+        - SSH Notify with Python3
+
+## Ansible
+
+```bash
+# [ansible-playbook]
+ansible-playbook -i ~/inventory.txt ./ansible-playbook.yml
+
+# [ansible-vault]
+ansible-vault create ./keys/ansible/ansible.yml
+ansible-vault view ./keys/ansible/ansible.yml
+ansible-vault edit ./keys/ansible/ansible.yml
+
+ansible-vault encrypt ./keys/ansible/ansible.yml
+ansible-vault decrypt ./keys/ansible/ansible.yml
+
+ansible-vault rekey ./keys/ansible/ansible.yml
+```
 
 ## Docker
 
@@ -26,6 +47,7 @@ In this project I use docker to run tools.
 1. Build, Start
 
 ```bash
+# [docker]
 # docker build --build-arg TARGET_VALUE=<Public 아이피> -t automation-store .
 docker build -t automation-store .
 docker run -t -i automation-store
@@ -34,12 +56,8 @@ docker run -t -i automation-store
 2. Clean up
 
 ```bash
-# Stop all containers
-docker stop $(docker ps -a -q)
-
-# Remove all containers
-docker rm $(docker ps -a -q)
-
-# Remove all images
-docker rmi $(docker images -q) 
+# [docker]
+docker stop $(docker ps -a -q)  # Stop all containers
+docker rm $(docker ps -a -q)    # Remove all containers
+docker rmi $(docker images -q)  # Remove all images
 ```

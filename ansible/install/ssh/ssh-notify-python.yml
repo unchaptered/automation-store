@@ -1,6 +1,7 @@
 # NGINX Cook Book 74p
-# [STEP 1] Preprase python3-pip using ./ansible/install/python/python-install.yml
-# [STEP 2] ansible-playbook -i ./keys/inventory.txt ./ansible/install/ssh/ssh-notify-python.yml
+# [STEP 1] Prepare config file references on https://github.com/unchaptered/automation-store/blob/main/keys/README.md#keysansibleansibleinstallsshssh-notify-pythonyml
+# [STEP 2] Preprase python3-pip using ./ansible/install/python/python-install.yml
+# [STEP 3] ansible-playbook -i ./keys/inventory.txt ./ansible/install/ssh/ssh-notify-python.yml
 
 - name: Install SSH Notiy Python 
   hosts: all
