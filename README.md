@@ -4,6 +4,17 @@
 
 ![](images\public-ec2.png)
 
+- Install
+    - NGINX
+        - Install by apt
+        - Install by role(ansible-galaxy)
+        - Install and HTTP
+        - Install and HTTP LB(ip hash)
+        - Install and HTTP LB(least conn)
+        - Install and HTTP LB(round robin)
+    - Node
+        - 16.x
+
 ## Docker
 
 Some Automation, Provisioning Utility Tools can't support Windows. <br>
