@@ -2,7 +2,7 @@
 # [STEP 1] ansible-galaxy install nginxinc.nginx
 # [STEP 2] ansible-playbook -i ./keys/inventory.txt ./ansible/install/nginx/nginx-install-role.yml
 
-- name: Converge
+- name: NGINX Install by Role
   hosts: all
   become: True
   tasks:
