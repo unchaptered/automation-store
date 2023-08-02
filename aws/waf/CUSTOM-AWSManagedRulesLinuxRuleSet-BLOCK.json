@@ -1,0 +1,41 @@
+{
+    "Name": "CUSTOM-AWSManagedRulesLinuxRuleSet-BLOCK",
+    "Priority": 7,
+    "Action": {
+      "Block": {
+        "CustomResponse": {
+          "ResponseCode": 403,
+          "CustomResponseBodyKey": "AWSManagedRulesLinuxRuleSet-Response"
+        }
+      }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "CUSTOM-AWSManagedRulesLinuxRuleSet"
+    },
+    "Statement": {
+      "OrStatement": {
+        "Statements": [
+          {
+            "LabelMatchStatement": {
+              "Scope": "LABEL",
+              "Key": "awswaf:managed:aws:linux-os:LFI_QueryString"
+            }
+          },
+          {
+            "LabelMatchStatement": {
+              "Scope": "LABEL",
+              "Key": "awswaf:managed:aws:linux-os:LFI_Header"
+            }
+          },
+          {
+            "LabelMatchStatement": {
+              "Scope": "LABEL",
+              "Key": "awswaf:managed:aws:linux-os:LFI_URIPath"
+            }
+          }
+        ]
+      }
+    }
+  }

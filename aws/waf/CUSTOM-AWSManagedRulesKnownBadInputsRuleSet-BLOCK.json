@@ -1,0 +1,53 @@
+{
+  "Name": "CUSTOM-AWSManagedRulesKnownBadInputsRuleSet-BLOCK",
+  "Priority": 6,
+  "Statement": {
+    "OrStatement": {
+      "Statements": [
+        {
+          "LabelMatchStatement": {
+            "Scope": "LABEL",
+            "Key": "awswaf:managed:aws:known-bad-inputs:JavaDeserializationRCE_URIPath"
+          }
+        },
+        {
+          "LabelMatchStatement": {
+            "Scope": "LABEL",
+            "Key": "awswaf:managed:aws:known-bad-inputs:Propfind_Method"
+          }
+        },
+        {
+          "LabelMatchStatement": {
+            "Scope": "LABEL",
+            "Key": "awswaf:managed:aws:known-bad-inputs:ExploitablePaths_URIPath"
+          }
+        },
+        {
+          "LabelMatchStatement": {
+            "Scope": "LABEL",
+            "Key": "awswaf:managed:aws:known-bad-inputs:Log4JRCE_QueryString"
+          }
+        },
+        {
+          "LabelMatchStatement": {
+            "Scope": "LABEL",
+            "Key": "awswaf:managed:aws:known-bad-inputs:JavaDeserializationRCE_Body"
+          }
+        }
+      ]
+    }
+  },
+  "Action": {
+    "Block": {
+      "CustomResponse": {
+        "ResponseCode": 403,
+        "CustomResponseBodyKey": "AWSManagedRulesKnownBadInputsRuleSet-Response"
+      }
+    }
+  },
+  "VisibilityConfig": {
+    "SampledRequestsEnabled": true,
+    "CloudWatchMetricsEnabled": true,
+    "MetricName": "CUSTOM-AWSManagedRulesKnownBadInputsRuleSet-BLOCK"
+  }
+}

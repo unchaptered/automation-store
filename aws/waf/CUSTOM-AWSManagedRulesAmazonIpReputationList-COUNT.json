@@ -1,0 +1,18 @@
+{
+    "Name": "CUSTOM-AWSManagedRulesAmazonIpReputationList-COUNT",
+    "Priority": 5,
+    "Statement": {
+      "LabelMatchStatement": {
+        "Scope": "LABEL",
+        "Key": "awswaf:managed:aws:amazon-ip-list:AWSManagedIPDDoSList"
+      }
+    },
+    "Action": {
+      "Count": {}
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "CUSTOM-AWSManagedRulesAmazonIpReputationList"
+    }
+  }
